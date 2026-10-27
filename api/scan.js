@@ -272,17 +272,43 @@ No markdown. No explanation outside JSON.
 
     const metaData = await metaResponse.json();
 
-    if (!metaResponse.ok) {
-      console.error("Meta scan error:", {
-        status: metaResponse.status,
-        code: metaData.error?.code
-      });
+if (!metaResponse.ok) {
+  const code =
+    metaData.error?.code ?? "unknown_error";
 
-      return res.status(502).json({
-        error: "Meta could not analyze the image",
-        metaStatus: metaResponse.status
-      });
-    }
+  const requestId =
+    metaResponse.headers.get("x-request-id");
+
+  console.error("FORESIGHT META SCAN ERROR:", {
+    status: metaResponse.status,
+    code,
+    message: metaData.error?.message,
+    model: MODEL,
+    requestId
+  });
+
+  let message = "Meta image analysis failed.";
+
+  if (code === "model_not_found") {
+    message =
+      `Meta model ${MODEL} is unavailable ` +
+      "to this API project. Verify model access.";
+  } else if (metaResponse.status === 401) {
+    message = "Meta API authentication failed.";
+  } else if (metaResponse.status === 403) {
+    message = "Meta API permission denied.";
+  } else if (metaResponse.status === 429) {
+    message = "Meta API rate limit exceeded.";
+  } else if (metaResponse.status === 400) {
+    message = "Meta rejected the scan request.";
+  }
+
+  return res.status(502).json({
+    error: message,
+    metaStatus: metaResponse.status,
+    metaCode: code
+  });
+}
 
     const identified = parseAI(extractText(metaData));
 
