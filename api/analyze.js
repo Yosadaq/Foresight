@@ -91,6 +91,15 @@ identification report.
     const data = await response.json();
 
     
+console.log("META DIAGNOSTICS:", {
+    status: response.status,
+    errorType: data.error?.type ?? null,
+    errorCode: data.error?.code ?? null,
+    errorMessage: data.error?.message ?? null,
+    model: MODEL
+});
+
+    
 if (!response.ok) {
   console.error(
     "Meta API failure:",
