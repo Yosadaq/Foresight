@@ -101,6 +101,37 @@ console.log("META DIAGNOSTICS:", {
 
     
 if (!response.ok) {
+
+  
+if (response.status === 404) {
+  try {
+    const modelsResponse = await fetch(
+      "https://api.meta.ai/v1/models",
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`
+        }
+      }
+    );
+
+    const modelsData = await modelsResponse.json();
+
+    console.log("META AVAILABLE MODELS:", {
+      status: modelsResponse.status,
+      models: (modelsData.data ?? []).map(
+        model => model.id
+      ),
+      error: modelsData.error ?? null
+    });
+
+  } catch (error) {
+    console.error(
+      "MODEL LIST CHECK FAILED:",
+      error.message
+    );
+  }
+}
+
   console.error(
     "Meta API failure:",
     JSON.stringify({
