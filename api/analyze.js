@@ -75,6 +75,20 @@ numbers, quantities, or specifications.
 
 Return a clear, readable inventory
 identification report.
+
+Identify the manufacturing part number visible
+in this image.
+If a part number is clearly visible, include
+this exact line in your response:
+Part Number: [EXACT_VISIBLE_NUMBER]
+Do not invent a part number.
+Do not treat dimensions, quantities, serial
+numbers, or dates as part numbers without
+supporting evidence.
+If the part number cannot be determined,
+write:
+Part Number: UNKNOWN
+
 `
                 },
                 {
