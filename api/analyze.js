@@ -90,13 +90,36 @@ identification report.
 
     const data = await response.json();
 
-    if (!response.ok) {
-      console.error("Meta request failed:", response.status);
+    
+if (!response.ok) {
+  console.error(
+    "Meta API failure:",
+    JSON.stringify({
+      status: response.status,
+      error: data.error,
+      requestId: response.headers.get("x-request-id")
+    })
+  );
 
-      return res.status(502).json({
-        error: "Meta image analysis failed."
-      });
-    }
+  const safeMessages = {
+    400: "Meta rejected the request format.",
+    401: "Meta API key is invalid or expired.",
+    403: "Meta model access or billing permission denied.",
+    404: "Meta model or API endpoint was not found.",
+    413: "The image request is too large.",
+    429: "Meta API rate limit exceeded.",
+    500: "Meta experienced an internal error.",
+    503: "Meta service is temporarily unavailable."
+  };
+
+  return res.status(502).json({
+    error:
+      safeMessages[response.status] ??
+      "Meta returned an unexpected error.",
+    metaStatus: response.status
+  });
+}
+
 
     const result = (data.output ?? [])
       .filter(item => item.type === "message")
