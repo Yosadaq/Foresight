@@ -242,11 +242,32 @@ const required = [
       report
     });
 
-  } catch (error) {
-    console.error("[RCA ANALYSIS]", error.message);
+  
+} catch (error) {
 
-    return res.status(502).json({
-      error: "Unable to generate RCA report"
+  const timedOut =
+    error?.name === "TimeoutError" ||
+    error?.name === "AbortError";
+
+  console.error("[RCA ANALYSIS FAILED]", {
+    type: error?.name,
+    message: error?.message,
+    timedOut
+  });
+
+  if (timedOut) {
+    return res.status(504).json({
+      error:
+        "The AI investigation exceeded its response time limit. Please retry the analysis.",
+      code: "RCA_AI_TIMEOUT",
+      retryable: true
     });
   }
+
+  return res.status(502).json({
+    error: "Unable to generate RCA report.",
+    code: "RCA_AI_FAILED",
+    retryable: false
+  });
+}
 }
