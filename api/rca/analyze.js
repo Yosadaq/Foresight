@@ -108,6 +108,24 @@ string fields:
 Do not place markdown fences around the JSON.
 Do not use raw technical field names in the
 human-facing report or management email.
+
+Keep the investigation concise while preserving
+all important evidence.
+
+Use:
+- Executive summary: 100 words maximum
+- Inventory/count summary: 80 words maximum
+- Up to 3 possible root causes
+- Up to 5 corrective actions
+- Up to 4 preventive actions
+- Up to 4 outstanding verification items
+- Management email: 200-300 words
+
+Avoid repeating the same information across sections.
+
+Use concise professional manufacturing language.
+Do not include database field names or raw JSON
+in the report.
 `;
 
 
