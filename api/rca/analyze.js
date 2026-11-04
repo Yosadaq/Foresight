@@ -215,14 +215,20 @@ export default async function handler(req, res) {
 
     const report = extractJSON(content);
 
-    const required = [
-      "summary",
-      "possibleCauses",
-      "nextVerification",
-      "correctiveAction",
-      "preventiveAction",
-      "effectivenessCheck"
-    ];
+    
+const required = [
+  "summary",
+  "countSummary",
+  "completedChecks",
+  "outstandingChecks",
+  "possibleCauses",
+  "nextVerification",
+  "correctiveAction",
+  "preventiveAction",
+  "effectivenessCheck",
+  "managementEmailSubject",
+  "managementEmailBody"
+];
 
     for (const field of required) {
       if (typeof report[field] !== "string") {
