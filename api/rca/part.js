@@ -1,12 +1,14 @@
 
 //
 // api/rca/part.js
+// Foresight Hackathon
 //
-// Public, read-only hackathon demo endpoint.
-// No user authentication required.
+// Vercel -> Supabase
+// Uses server-side SUPABASE_SECRET_KEY
 //
 
 export default async function handler(req, res) {
+
   res.setHeader("Cache-Control", "no-store");
 
   if (req.method !== "GET") {
@@ -18,6 +20,7 @@ export default async function handler(req, res) {
   }
 
   try {
+
     const rawNumber = req.query.number;
 
     if (
@@ -25,7 +28,7 @@ export default async function handler(req, res) {
       rawNumber.length > 80
     ) {
       return res.status(400).json({
-        error: "A valid part number is required."
+        error: "Valid part number required."
       });
     }
 
@@ -33,96 +36,105 @@ export default async function handler(req, res) {
       .trim()
       .toUpperCase();
 
-    // Limit this public endpoint to fictional demo data.
+    // This public endpoint exposes demo parts only.
     if (!/^DEMO-[A-Z0-9-]+$/.test(partNumber)) {
       return res.status(404).json({
-        error: "No demo engineering record found."
+        error: "Demo part not found."
       });
     }
 
-    const supabaseURL = process.env.SUPABASE_URL;
-    const anonKey = process.env.SUPABASE_ANON_KEY;
+    const supabaseURL =
+      process.env.SUPABASE_URL;
 
-    if (!supabaseURL || !anonKey) {
+    const supabaseKey =
+      process.env.SUPABASE_SECRET_KEY;
+
+    if (!supabaseURL || !supabaseKey) {
       console.error(
-        "[RCA] Missing Supabase configuration."
+        "[FORESIGHT RCA] Missing Supabase configuration"
       );
 
       return res.status(500).json({
-        error: "RCA database is not configured."
+        error: "Database configuration unavailable."
       });
     }
 
-    const url = new URL(
+    const queryURL = new URL(
       `${supabaseURL.replace(/\/$/, "")}/rest/v1/foresight_rca_part_health`
     );
 
-    url.searchParams.set(
+    queryURL.searchParams.set(
       "part_number",
       `eq.${partNumber}`
     );
 
-    url.searchParams.set("select", "*");
-    url.searchParams.set("limit", "1");
+    queryURL.searchParams.set("select", "*");
+    queryURL.searchParams.set("limit", "1");
+    queryURL.searchParams.set("demo_data", "eq.true");
 
     const headers = {
-      apikey: anonKey,
-      Accept: "application/json"
+      "apikey": supabaseKey,
+      "Accept": "application/json"
     };
 
-    // Legacy anon JWTs can also be bearer tokens.
-    // New publishable keys should not be used
-    // as bearer JWTs.
-    if (anonKey.startsWith("eyJ")) {
-      headers.Authorization = `Bearer ${anonKey}`;
+    // Legacy service_role keys are JWTs.
+    // Modern sb_secret_* keys are NOT bearer JWTs.
+    if (supabaseKey.startsWith("eyJ")) {
+      headers.Authorization = `Bearer ${supabaseKey}`;
     }
 
-    const response = await fetch(url, {
+    const response = await fetch(queryURL, {
       method: "GET",
       headers
     });
 
     if (!response.ok) {
+
       console.error(
-        "[RCA] Supabase request failed:",
+        "[FORESIGHT RCA] Supabase HTTP",
         response.status,
         await response.text()
       );
 
       return res.status(502).json({
-        error: "Unable to load engineering data."
+        error: "Unable to retrieve engineering information."
       });
     }
 
     const records = await response.json();
 
-    if (!Array.isArray(records)) {
-      return res.status(502).json({
-        error: "Unexpected database response."
-      });
-    }
-
-    if (records.length === 0) {
+    if (
+      !Array.isArray(records) ||
+      records.length === 0
+    ) {
       return res.status(404).json({
-        error: "Engineering record not found."
+        error: "Engineering part not found."
       });
     }
 
     const part = records[0];
 
-    if (part.demo_data !== true) {
+    // Defense in depth: never expose non-demo rows.
+    if (
+      part.demo_data !== true ||
+      !part.part_number?.startsWith("DEMO-")
+    ) {
       return res.status(404).json({
-        error: "Engineering record not found."
+        error: "Engineering part not found."
       });
     }
 
     return res.status(200).json(part);
 
   } catch (error) {
-    console.error("[RCA ERROR]", error);
+
+    console.error(
+      "[FORESIGHT RCA]",
+      error
+    );
 
     return res.status(500).json({
-      error: "An internal RCA error occurred."
+      error: "Unable to process RCA lookup."
     });
   }
 }
