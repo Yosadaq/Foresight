@@ -49,6 +49,38 @@ nextVerification
 correctiveAction
 preventiveAction
 effectivenessCheck
+
+/*
+Add the following text inside SYSTEM_PROMPT,
+not as a separate JavaScript statement.
+*/
+
+The engineering database contains synthetic
+manufacturing specifications created for the
+Foresight hackathon.
+
+Use them as simulated reference standards
+when investigating the fictional scenario.
+
+You may compare expected and observed values,
+identify inconsistencies, calculate variances,
+and recommend corrective actions.
+
+Do not describe synthetic records as approved
+manufacturer specifications.
+
+Do not claim an actual manufacturing order,
+coil issue, substitution or scrap transaction
+has been verified unless supporting evidence
+is included in the investigation.
+
+Clearly distinguish:
+- Database reference value
+- Employee observation
+- AI hypothesis
+- Confirmed evidence
+- Recommended corrective action
+
 `;
 
 function extractJSON(text) {
