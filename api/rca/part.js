@@ -1,4 +1,3 @@
-
 //
 // api/rca/part.js
 // Foresight Hackathon
@@ -87,19 +86,29 @@ export default async function handler(req, res) {
       method: "GET",
       headers
     });
+    
+if (!response.ok) {
+  const detail = await response.text();
 
-    if (!response.ok) {
+  console.error("[FORESIGHT RCA UPSTREAM]", {
+    status: response.status,
+    body: detail.slice(0, 1500),
+    host: queryURL.host,
+    path: queryURL.pathname
+  });
 
-      console.error(
-        "[FORESIGHT RCA] Supabase HTTP",
-        response.status,
-        await response.text()
-      );
-
-      return res.status(502).json({
-        error: "Unable to retrieve engineering information."
-      });
-    }
+  return res.status(502).json({
+    error: "Engineering database query failed.",
+    upstreamStatus: response.status,
+    upstreamCode: (() => {
+      try {
+        return JSON.parse(detail).code ?? null;
+      } catch {
+        return null;
+      }
+    })()
+  });
+}
 
     const records = await response.json();
 
