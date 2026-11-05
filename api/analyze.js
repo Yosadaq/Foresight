@@ -13,6 +13,16 @@ export default async function handler(req, res) {
     });
   }
 
+  const allowed = await enforceAIRateLimit(
+  req,
+  res,
+  "image"
+);
+
+if (!allowed) {
+  return;
+}
+
   const apiKey = process.env.MODEL_API_KEY;
 
   if (!apiKey) {
