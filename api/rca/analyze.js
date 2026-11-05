@@ -1,4 +1,3 @@
-
 //
 // api/rca/analyze.js
 // Generates evidence-based RCA reports.
@@ -608,6 +607,16 @@ export default async function handler(req, res) {
     });
   }
 
+const allowed = await enforceAIRateLimit(
+  req,
+  res,
+  "rca"
+);
+
+if (!allowed) {
+  return;
+}
+  
   const key = process.env.MODEL_API_KEY;
 
   if (!key) {
