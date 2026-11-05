@@ -148,6 +148,25 @@ The simulator can be used for interface testing, manual part searches, report vi
 
 ---
 
+## Manufacturing Test Images
+
+The `sample-images/` directory contains example manufacturing photographs for testing Foresight's computer vision and AI inventory recognition features.
+
+### How to Test
+
+1. Download the sample images from this repository.
+2. Save the selected image to your iPhone's Photos library or the iOS Simulator.
+3. Launch the Foresight application.
+4. Select **Choose Existing Photo**.
+5. Choose one of the manufacturing images.
+6. Run the AI scanning and recognition workflow.
+7. Review the detected components and estimated quantities.
+8. Confirm the part identification before proceeding with the manufacturing investigation.
+
+Images may include raw materials, manufactured components, inventory storage locations, and production environments.
+
+AI recognition results are estimates and should be confirmed before making inventory decisions.
+
 ## Installation Instructions
 
 ### Step 1 — Clone the GitHub Repository
