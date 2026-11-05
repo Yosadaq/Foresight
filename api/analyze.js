@@ -1,3 +1,6 @@
+import {
+  enforceAIRateLimit
+} from "./_lib/ai-rate-limit.js";
 
 const MODEL = "muse-wonder-1.0";
 
