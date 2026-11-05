@@ -4,6 +4,10 @@
 // Generates evidence-based RCA reports.
 //
 
+import {
+  enforceAIRateLimit
+} from "../_lib/ai-rate-limit.js";
+
 const MAX_BODY_BYTES = 45000;
 
 const SYSTEM_PROMPT = `
