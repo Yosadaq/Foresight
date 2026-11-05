@@ -1,0 +1,22 @@
+# Xcode local files
+.DS_Store
+*.xcuserstate
+xcuserdata/
+DerivedData/
+.build/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Local environment and sensitive credentials
+.env
+.env.*
+!.env.example
+**/Secrets.swift
+**/Secrets.plist
+**/Config.local.xcconfig
+*.p8
+*.p12
+*.mobileprovision
+
+# Keep .xcodeproj and any committed Swift package resolution files
