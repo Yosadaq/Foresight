@@ -326,6 +326,28 @@ The iOS project uses the hosted API. Running a completely independent backend re
 
 ---
 
+### AI API Access for Hackathon Judges
+
+Foresight uses a hosted Vercel backend for Meta AI inference and manufacturing inventory retrieval.
+
+The iOS application does not require judges to obtain or configure Meta AI or Supabase API keys.
+
+**Hosted demonstration API:** https://foresight-omega.vercel.app
+
+To run the demonstration:
+
+1. Clone this repository.
+2. Open `Foresight.xcodeproj` in Xcode.
+3. Select a compatible iPhone simulator or physical device.
+4. Build and launch the application.
+5. Connect to the internet to access the hosted manufacturing and AI services.
+
+The hosted backend contains the required server-side credentials. These credentials are not distributed with the source code.
+
+For an independent backend deployment, developers must configure their own Meta AI and Supabase credentials, along with the required database resources.
+
+The hosted demonstration uses test data and should not be used for production inventory adjustments.
+
 ## Example Manufacturing Investigation
 
 Consider an inventory part with a negative ERP balance.
