@@ -1,22 +1,27 @@
-# Foresight
-AI-powered iOS inventory management using Meta Muse, computer vision, OCR, and autonomous agents to identify manufacturing parts, track materials, and streamline warehouse operations.
+Foresight
 
-**Built for the Meta AI Developer Hackathon 2026**
+AI-Powered Inventory Intelligence, Computer Vision & Root Cause Analysis
 
-Foresight is a native iOS application designed to help manufacturers identify inventory discrepancies, investigate their root causes, and recommend corrective actions using artificial intelligence.
+Foresight is a native iOS application that uses Meta AI, computer vision, and voice-guided investigations to help identify physical objects, recognize manufacturing parts, analyze inventory discrepancies, and recommend corrective actions.
 
-The application combines computer vision, manufacturing inventory data, voice-guided investigations, and Meta AI to simplify inventory control and improve manufacturing accuracy.
+Built for the Meta AI Developer Hackathon 2026
 
----
+Foresight combines AI-powered image recognition, manufacturing inventory data, speech recognition, and root-cause analysis into a unified mobile experience.
 
-## The Problem
+Although Foresight focuses on manufacturing environments, its image recognition feature can also analyze everyday objects. Users can photograph objects using their iPhone camera or select existing pictures from their photo library.
+
+The application demonstrates how AI can connect visual observations with structured inventory information and help employees investigate discrepancies more efficiently.
+
+⸻
+
+The Problem
 
 Manufacturing facilities frequently struggle with inaccurate inventory balances, missing production transactions, undocumented scrap, incorrect bills of materials, and material substitutions.
 
 A typical inventory-control process involves:
 
 1. Extracting updated inventory information from the ERP system.
-2. Exporting the data into Excel.
+2. Exporting data into Excel.
 3. Running macros to organize inventory discrepancies.
 4. Prioritizing parts with the largest negative balances.
 5. Assigning cycle counters to locate and count materials.
@@ -26,453 +31,608 @@ A typical inventory-control process involves:
 
 This process requires significant manual effort and can contribute to financial losses, production delays, and inaccurate physical inventories.
 
-**Foresight helps reduce the effort required to identify, investigate, and document these problems.**
+Foresight helps reduce the effort required to identify, investigate, and document these problems.
 
----
+⸻
 
-## Key Features
+Key Features
 
-### AI Manufacturing Part Recognition
+AI Object Recognition & Inventory Scanning
 
-- Capture manufacturing parts using the iPhone camera.
-- Analyze photographs using Meta AI.
-- Identify possible manufacturing components.
-- Estimate visible quantities.
-- Match identified parts with manufacturing inventory records.
-- Allow employees to confirm part identification before continuing.
+Foresight allows users to:
 
-### Manufacturing Inventory Intelligence
+* Take a picture using the iPhone camera.
+* Select an existing photograph from the photo library.
+* Identify visible objects using Meta AI.
+* Describe physical characteristics, materials, and markings.
+* Detect multiple object types in a single image.
+* Estimate or count visible quantities.
+* Extract readable manufacturing part numbers and labels.
+* Search for possible matches in the manufacturing database.
+* Review and confirm AI-generated results.
 
-- Search for manufacturing parts by part number.
-- Retrieve inventory information through the Foresight backend.
-- View inventory balances across manufacturing locations.
-- Identify positive, negative, and zero balances.
-- Display material specifications and engineering information.
-- Review manufacturing revisions, gauge, thickness, standard weight, and scrap factors.
-- Explore parent-child bill-of-material relationships.
+You do not need a manufacturing photograph to test image recognition.
 
-### AI Voice-Guided Root Cause Analysis
+For example, users can photograph a collection of pens, bolts, tools, boxes, electronic components, or other physical objects.
 
-Foresight guides employees through a manufacturing investigation using spoken questions and speech recognition.
+Foresight attempts to identify and count the visible objects. If the database does not contain a corresponding manufacturing record, the application can still return visual analysis results without claiming a verified catalog match.
 
-Topics include:
+AI-generated descriptions and quantities should always be reviewed for accuracy.
 
-- Part identification
-- Physical inventory counts
-- Inventory locations
-- Material specifications
-- Coil usage and substitutions
-- Engineering revisions
-- Standard weights and scrap factors
-- Bill-of-material consumption
-- Manufacturing orders
-- Production reporting and inventory transactions
+Manufacturing Inventory Intelligence
 
-Employees can provide responses using their voice or keyboard.
+Users can search for manufacturing parts by part number and retrieve associated inventory information.
 
-### AI-Generated Investigation Reports
+Available information may include:
+
+* Part number and description
+* ERP inventory balances
+* Inventory quantities by location
+* Material specifications
+* Engineering revisions
+* Material gauge and thickness
+* Standard weights
+* Scrap factors
+* Parent-child bill-of-material relationships
+
+Some engineering specifications are synthetic demonstration records and are not approved production standards.
+
+AI Voice-Guided Root Cause Analysis
+
+Foresight guides users through an inventory investigation using spoken questions and speech recognition.
+
+Investigation topics include:
+
+* Part identification
+* Physical inventory counts
+* Inventory locations
+* Material specifications
+* Coil usage and substitutions
+* Engineering revisions
+* Standard weights and scrap factors
+* Bill-of-material consumption
+* Manufacturing orders
+* Production reporting
+* Inventory transactions
+
+Users can answer using voice recognition or keyboard input.
+
+AI-Generated Investigation Reports
 
 Using Meta AI, Foresight generates:
 
-- Investigation summaries
-- Inventory and physical count findings
-- Completed and outstanding checks
-- Possible root causes
-- Recommended corrective actions
-- Preventive measures
-- Follow-up verification plans
-- Professional management email drafts
+* Investigation summaries
+* Inventory and physical count findings
+* Completed and outstanding checks
+* Possible root causes
+* Recommended corrective actions
+* Preventive measures
+* Follow-up verification plans
+* Professional management email drafts
 
-Reports can be stored locally on the device and reopened for review.
+Reports can be saved locally and reopened for review.
 
-### Manufacturing Transaction Interface
+Manufacturing Transaction Interface
 
-Foresight also includes interface workflows for:
+Foresight also demonstrates workflows for:
 
-- Reporting production
-- Transferring pieces
-- Reporting scrap
-- Issuing materials to manufacturing orders
+* Reporting production
+* Transferring pieces
+* Reporting scrap
+* Issuing materials to manufacturing orders
 
-Inventory-changing operations require a configured transaction service and appropriate approval. Demonstration workflows do not automatically modify production inventory.
+Inventory-changing operations require an appropriately configured transaction service and authorization. Demonstration workflows do not automatically modify production inventory.
 
----
+⸻
 
-## Technology Stack
+Technology Stack
 
-| Technology | Purpose |
-|---|---|
-| Swift | Native iOS development |
-| SwiftUI | Application interface |
-| Apple Speech Framework | Speech recognition |
-| AVFoundation | Voice synthesis and audio |
-| Meta AI | Image analysis and manufacturing RCA |
-| Vercel | Hosted backend API |
-| Supabase | Manufacturing inventory and engineering data |
-| REST APIs | Application-to-backend communication |
-| JSON | Data exchange and local report storage |
+Technology	Purpose
+Swift	Native iOS development
+SwiftUI	Application interface
+Apple Speech Framework	Speech recognition
+AVFoundation	Voice synthesis and audio
+Meta AI	Image analysis and root-cause investigations
+Vercel	Hosted backend API
+Supabase	Manufacturing inventory and engineering data
+Upstash Redis	Server-side AI rate limiting
+REST APIs	Application-to-backend communication
+JSON	Data exchange and local report storage
 
----
+⸻
 
-## System Architecture
+System Architecture
 
-**iOS Application (SwiftUI)**
-
-↓
-
-**Foresight REST API (Vercel)**
-
-↓
-
-**Supabase Manufacturing Database + Meta AI**
+             iOS Application
+                 SwiftUI
+                    |
+                    | HTTPS
+                    v
+          Foresight REST API
+                 Vercel
+                    |
+          +---------+---------+
+          |         |         |
+          v         v         v
+       Meta AI   Supabase   Upstash
+       Models    Database    Redis
+          |         |         |
+          v         v         v
+       Visual    Inventory   AI Usage
+       Analysis  Records     Limits
+          |
+          v
+     AI Investigation
+          |
+          v
+     Root Cause Report
 
 The iOS application communicates with the hosted backend over HTTPS.
 
-Sensitive Supabase and Meta API credentials remain on the backend and are not embedded in the iOS application.
+Meta API credentials, Supabase credentials, and Upstash Redis credentials remain on the server.
 
----
+No private API keys are embedded in the iOS application.
 
-## Requirements
+⸻
 
-To build Foresight, you need:
+Requirements
 
-- A Mac computer
-- Xcode with the project's required iOS SDK
-- An iPhone Simulator or compatible physical iPhone
-- Internet connectivity
-- Access to the configured Foresight backend
+To build and test Foresight, you need:
+
+* A Mac computer
+* Xcode with the project’s required iOS SDK
+* A compatible iPhone Simulator or physical iPhone
+* Internet connectivity
+* Access to the hosted Foresight backend
 
 A physical iPhone is recommended for testing the camera and voice-guided investigation features.
 
-The simulator can be used for interface testing, manual part searches, report viewing, and other supported functionality.
+The simulator supports interface testing, manual part searches, report viewing, and other available functionality.
 
----
+⸻
 
-## Manufacturing Test Images
+Installation Instructions
 
-The `sample-images/` directory contains example manufacturing photographs for testing Foresight's computer vision and AI inventory recognition features.
+Step 1 — Clone the Repository
 
-### How to Test
+Open Terminal and run:
 
-1. Download the sample images from this repository.
-2. Save the selected image to your iPhone's Photos library or the iOS Simulator.
-3. Launch the Foresight application.
-4. Select **Choose Existing Photo**.
-5. Choose one of the manufacturing images.
-6. Run the AI scanning and recognition workflow.
-7. Review the detected components and estimated quantities.
-8. Confirm the part identification before proceeding with the manufacturing investigation.
+git clone https://github.com/Yosadaq/Foresight.git
 
-Images may include raw materials, manufactured components, inventory storage locations, and production environments.
+Navigate into the project:
 
-AI recognition results are estimates and should be confirmed before making inventory decisions.
-
-## Installation Instructions
-
-### Step 1 — Clone the GitHub Repository
-
-Open Terminal on your Mac and run:
-
-```bash
-git clone https://github.com/YOUR_USERNAME/Foresight.git
-```
-
-Replace `YOUR_USERNAME` with the actual GitHub account hosting the repository.
-
-Navigate to the project directory:
-
-```bash
 cd Foresight
-```
 
-### Step 2 — Open the Xcode Project
+Step 2 — Open the Xcode Project
 
-Locate:
+Open:
 
-```text
 Foresight.xcodeproj
-```
 
-Double-click the project or run:
+Or run:
 
-```bash
 open Foresight.xcodeproj
-```
 
-Wait for Xcode to load the project.
+Step 3 — Resolve Dependencies
 
-### Step 3 — Resolve Dependencies
+If Xcode requests package resolution, allow it to complete.
 
-If Xcode requests package resolution, allow it to finish.
+Alternatively, select:
 
-You can also select:
+File → Packages → Resolve Package Versions
 
-**File → Packages → Resolve Package Versions**
-
-### Step 4 — Configure the Run Destination
-
-In Xcode:
+Step 4 — Configure the Run Destination
 
 1. Select the Foresight scheme.
 2. Choose a compatible iPhone Simulator.
-3. Ensure the Foresight app target is selected.
-4. Press **Command + R** to build and run.
+3. Confirm the Foresight app target.
+4. Press Command + R to build and run.
 
-For a physical iPhone, connect the device and configure code signing under:
+For a physical iPhone, connect your device and configure code signing under:
 
-**Target → Signing & Capabilities**
+Target → Signing & Capabilities
 
-Select your own Apple development team if required.
+Step 5 — Launch Foresight
 
-### Step 5 — Launch Foresight
-
-Once the application launches, you can begin exploring the manufacturing inventory features.
+Once the application launches, you can explore the image recognition, manufacturing inventory, and AI investigation features.
 
 No in-app user account is required for the hackathon demonstration.
 
----
+⸻
 
-## How to Test Foresight
+Quick Start — Test Foresight
 
-### Test 1 — Manufacturing Part Lookup
+Foresight offers two main demonstration workflows.
+
+Option A: Scan a photograph
+
+Use the camera or photo library to analyze visible objects.
+
+Option B: Search a manufacturing part
+
+Enter a manufacturing part number, retrieve inventory details, and run the AI root-cause investigation.
+
+These workflows can be tested independently.
+
+⸻
+
+Test 1 — Scan Any Object With AI
+
+You do not need a special manufacturing image.
+
+Using Your Camera
 
 1. Launch Foresight.
-2. Locate **Manufacturing Part Lookup**.
-3. Enter a part number available in the configured backend inventory.
-4. Tap **Search Manufacturing Database**.
-5. Review the part description, inventory quantities, and manufacturing details.
+2. Select Open Camera.
+3. Photograph one or more physical objects.
+4. Tap Scan, Identify & Count.
+5. Wait for Meta AI to process the image.
+6. Review the identified objects.
+7. Review the visible quantities and descriptions.
+8. Confirm or correct the results.
 
-### Test 2 — AI Part Recognition
+Using Your Photo Library
 
-1. Tap **Open Camera** or **Choose Existing Photo**.
-2. Capture or select a photograph of manufacturing components.
-3. Tap **Scan, Identify & Count**.
-4. Review the detected items and estimated quantities.
-5. Select or manually enter the correct manufacturing part number.
-6. Open the corresponding part details.
+1. Launch Foresight.
+2. Select Choose Existing Photo.
+3. Select a photograph from your library.
+4. Tap Scan, Identify & Count.
+5. Review the AI-generated results.
 
-AI identification and quantity estimates require employee confirmation.
+Suggested Objects for Testing
 
-### Test 3 — Manufacturing Inventory Details
+You can experiment with photographs containing:
 
-From Part Details, review:
+* Pens, pencils, or markers
+* Nuts, bolts, and washers
+* Hand tools
+* Electronic components
+* Boxes or packaged products
+* Metal components
+* Storage bins
+* Everyday household objects
 
-- Part number and description
-- ERP inventory balance
-- Inventory quantities by area
-- Material and revision
-- Gauge and thickness
-- Standard weight
-- Scrap factor
-- Bill-of-material components, where available
+Images with clear lighting, minimal overlap, and visible object boundaries generally provide better conditions for recognition and counting.
 
-Some engineering specifications are synthetic test records associated with imported manufacturing part identifiers.
+Expected Results
 
-### Test 4 — AI Root Cause Investigation
+Foresight may return:
 
-1. Open a manufacturing part.
-2. Select **Analyze This Part**.
-3. Follow the voice-guided investigation.
-4. Answer questions about physical counts, materials, production, scrap, and manufacturing orders.
-5. Advance through the investigation.
-6. Select **Generate AI Root Cause Report**.
+* Object descriptions
+* Visible quantities
+* Readable text or markings
+* Possible part numbers
+* Catalog match candidates
+* Warnings about uncertain counts
+* Requests for additional verification
 
-Foresight sends the investigation information to the backend for AI analysis.
+Important: Not every object will exist in the manufacturing database.
 
-### Test 5 — Review the AI Report
+When a catalog match is unavailable, the AI scan can still demonstrate visual recognition without inventing a manufacturing part number.
 
-The generated report may include:
+⸻
 
-- Investigation summary
-- Inventory and physical count information
-- Possible root causes
-- Corrective-action recommendations
-- Preventive measures
-- Outstanding investigations
-- Management communication
+Test 2 — Manufacturing Part Number Lookup
 
-Select **Email Management** or the available sharing option to prepare the report for review.
+Foresight includes a manufacturing inventory lookup feature connected to the hosted backend.
+
+To test:
+
+1. Launch Foresight.
+2. Open Manufacturing Part Lookup.
+3. Enter a part number from the configured demonstration database.
+4. Tap Search Manufacturing Database.
+5. Review the returned part information.
+6. Open Part Details to examine available inventory and engineering data.
+
+Demonstration Part Numbers
+
+Use the following section to document part numbers verified to exist in the hosted Supabase demonstration database.
+
+The actual database part numbers must be added before publishing this section as a judge-ready lookup list.
+
+Part Number	Description	Demonstration
+To be populated	Manufacturing component	Inventory lookup and RCA
+To be populated	Raw material	Material specifications
+To be populated	Manufactured assembly	Bill-of-material relationships
+To be populated	Inventory discrepancy example	Root-cause investigation
+
+For the strongest demonstration, include at least one verified part with a negative ERP balance and enough associated inventory data to support a meaningful root-cause investigation.
+
+These identifiers should be taken directly from the configured test database rather than invented.
+
+⸻
+
+Test 3 — Review Manufacturing Inventory Details
+
+After successfully finding a manufacturing part, open its details.
+
+Available fields may include:
+
+* Part number
+* Description
+* ERP inventory balance
+* Inventory quantities by area
+* Material type
+* Engineering revision
+* Gauge and thickness
+* Standard weight
+* Scrap factor
+* Bill-of-material components
+
+The fields displayed depend on the selected record and available backend data.
+
+Some engineering specifications are synthetic demonstration data.
+
+⸻
+
+Test 4 — Run AI Root Cause Analysis
+
+This is one of Foresight’s primary demonstration features.
+
+Steps
+
+1. Open Manufacturing Part Lookup.
+2. Search for a verified manufacturing part number.
+3. Open the returned part.
+4. Select Analyze This Part.
+5. Follow the voice-guided investigation.
+6. Answer questions about inventory counts, materials, scrap, and manufacturing orders.
+7. Continue through the investigation.
+8. Select Generate AI Root Cause Report.
+
+Foresight sends the investigation context to the backend for AI analysis.
+
+Example Investigation Questions
+
+Foresight may ask:
+
+* Does the physical part match the inventory record?
+* What quantity was physically counted?
+* Which storage locations were inspected?
+* Was the correct raw material used?
+* Were rejected pieces reported as scrap?
+* Was the correct engineering revision used?
+* Were manufacturing transactions recorded correctly?
+* Does the manufacturing order reference the correct components?
+* Could an unrecorded material substitution explain the discrepancy?
+
+The AI uses the available responses to identify potential causes and recommend follow-up actions.
+
+A potential cause is not treated as confirmed without supporting evidence.
+
+⸻
+
+Test 5 — Generate an AI Investigation Report
+
+After completing the investigation, select Generate AI Root Cause Report.
+
+The report may contain:
+
+* Investigation summary
+* Inventory and physical count information
+* Potential root causes
+* Completed checks
+* Outstanding verification steps
+* Corrective-action recommendations
+* Preventive measures
+* Follow-up investigation tasks
+* Management communication
+
+Select Email Management or the available sharing option to prepare the report for review.
 
 Sending an email requires a configured email application or supported sharing destination.
 
-### Test 6 — Saved Investigations
+⸻
 
-Open **Saved Root Cause Reports** from the application.
+Test 6 — Saved Investigations
 
-Previously saved reports can be reopened on the same device.
+Open Saved Root Cause Reports in the application.
 
-Local reports are stored in the application's private storage and are not automatically synchronized between devices.
+Previously saved investigations can be reopened on the same device.
 
----
+Reports are stored in the application’s private local storage and are not automatically synchronized between devices.
 
-## Backend Configuration
+⸻
+
+Backend Configuration
 
 The iOS application connects to the hosted Foresight API:
 
-```text
 https://foresight-omega.vercel.app
-```
 
-The backend includes routes for manufacturing part lookup, image analysis, scanning, and root cause analysis.
+The backend supports manufacturing part lookup, image scanning, and root-cause analysis.
 
 Example endpoints:
 
-```text
 GET  /api/parts/{partNumber}
 POST /api/scan
 POST /api/analyze
 GET  /api/rca/part?number={partNumber}
 POST /api/rca/analyze
-```
 
-The exact capabilities of these routes depend on the deployed backend configuration.
+The exact capabilities and availability of these routes depend on the deployed backend configuration.
 
-### Environment Variables
+Environment Variables
 
 The backend uses server-side environment variables, including:
 
-```text
 SUPABASE_URL
 SUPABASE_SECRET_KEY
 MODEL_API_KEY
-```
+META_MODEL
+UPSTASH_REDIS_REST_URL
+UPSTASH_REDIS_REST_TOKEN
 
-The Meta API key variable must match the configuration used by the deployed backend.
+META_MODEL is optional when the backend provides a default model identifier.
 
-**Never commit actual API keys, database secrets, or private credentials to GitHub.**
+Never commit API keys, Redis tokens, database secrets, or other private credentials to GitHub.
 
-The iOS project uses the hosted API. Running a completely independent backend requires the backend source code, database setup, and corresponding environment configuration.
+AI Rate Limits
 
----
+To protect the shared hackathon demonstration backend, Foresight uses Upstash Redis for server-side AI rate limiting.
 
-### AI API Access for Hackathon Judges
+AI Operation	Limit
+Root-cause analysis	5 requests per IP per hour
+Image analysis	10 requests per IP per hour
+Combined AI requests	100 requests per day across all users
+
+The daily limit is shared across the hosted demonstration, not allocated individually to each user.
+
+When a limit is reached, the API returns an HTTP 429 response. If the rate-limit service is unavailable, AI requests are blocked temporarily.
+
+⸻
+
+AI API Access for Hackathon Judges
 
 Foresight uses a hosted Vercel backend for Meta AI inference and manufacturing inventory retrieval.
 
-The iOS application does not require judges to obtain or configure Meta AI or Supabase API keys.
+Judges do not need to obtain or configure their own Meta AI, Supabase, or Upstash credentials to use the hosted demonstration.
 
-**Hosted demonstration API:** https://foresight-omega.vercel.app
+Hosted demonstration API:
 
-To run the demonstration:
+https://foresight-omega.vercel.app
 
-1. Clone this repository.
-2. Open `Foresight.xcodeproj` in Xcode.
-3. Select a compatible iPhone simulator or physical device.
-4. Build and launch the application.
-5. Connect to the internet to access the hosted manufacturing and AI services.
+To run the application:
 
-The hosted backend contains the required server-side credentials. These credentials are not distributed with the source code.
+1. Clone the repository.
+2. Open Foresight.xcodeproj.
+3. Select a compatible iPhone Simulator or physical device.
+4. Build and launch Foresight.
+5. Connect to the internet.
+6. Test object recognition using the camera or photo library.
+7. Search a verified manufacturing part number.
+8. Run the AI root-cause investigation.
 
-For an independent backend deployment, developers must configure their own Meta AI and Supabase credentials, along with the required database resources.
+The hosted demonstration uses test data and must not be used for production inventory adjustments.
 
-The hosted demonstration uses test data and should not be used for production inventory adjustments.
+For independent deployment, developers must configure their own backend credentials and database resources.
 
-## Example Manufacturing Investigation
+⸻
 
-Consider an inventory part with a negative ERP balance.
+Example Manufacturing Investigation
 
-An employee locates the part, reviews the manufacturing information, and performs a physical count.
+Consider a manufacturing part with a negative ERP inventory balance.
 
-During the investigation, Foresight asks questions such as:
+An employee locates the part, reviews the manufacturing record, and performs a physical count.
 
-- Does the physical part match the inventory record?
-- Which locations were counted?
-- Was the correct coil or material used?
-- Were rejected pieces reported as scrap?
-- Does the manufacturing order reference the correct components?
-- Were production and material transactions posted correctly?
+Foresight guides the employee through questions about storage locations, material usage, production transactions, scrap reporting, and engineering revisions.
 
-Meta AI evaluates the available information and generates potential explanations and recommended follow-up actions.
+Meta AI then evaluates the investigation responses and generates potential explanations.
 
-The application does not treat a possible cause as confirmed without supporting evidence.
+Possible findings might include:
 
----
+* An unreported scrap transaction
+* Incorrect material consumption
+* An inventory transfer not recorded
+* A manufacturing-order reporting error
+* An incorrect bill-of-material quantity
+* A material substitution
+* An incorrect physical count
 
-## Safety and Data Considerations
+These are examples of possible findings, not confirmed diagnoses.
+
+The employee reviews the recommendations and determines which follow-up actions are appropriate.
+
+⸻
+
+Safety and Data Considerations
 
 Foresight is a hackathon prototype.
 
-Some engineering specifications and manufacturing relationships are generated for demonstration purposes and should not be used as approved production standards.
+Some engineering specifications and manufacturing relationships are generated for demonstration purposes.
+
+They must not be treated as approved manufacturing standards.
 
 Inventory corrections, material substitutions, manufacturing-order changes, and engineering revisions require appropriate human review and authorization.
 
-AI responses are recommendations, not automatic production decisions.
+AI responses are recommendations rather than automatic production decisions.
 
-The public demonstration should not contain confidential manufacturing information, private employee information, or production credentials.
+Do not upload confidential manufacturing photographs, sensitive employee information, private production records, or credentials to the public demonstration.
 
----
+⸻
 
-## Troubleshooting
+Troubleshooting
 
-### Application Does Not Build
+Application Does Not Build
 
-- Confirm Xcode is installed.
-- Select a compatible simulator.
-- Resolve package dependencies.
-- Confirm all required Swift files are included in the Foresight target.
+* Confirm Xcode is installed.
+* Select a compatible simulator.
+* Resolve package dependencies.
+* Confirm required Swift files are included in the Foresight target.
 
-### Camera Is Unavailable
+Camera Is Unavailable
 
 Use a physical iPhone or select an existing photograph from the photo library.
 
-### Voice Recognition Does Not Work
+Image Recognition Fails
 
-- Allow microphone permission.
-- Allow speech recognition permission.
-- Confirm speech recognition is supported and available on the device.
+* Confirm internet connectivity.
+* Use a clear photograph with adequate lighting.
+* Avoid excessive image overlap.
+* Verify the hosted Meta API is available.
+* Check whether the demonstration AI usage limit has been reached.
 
-### Manufacturing Data Does Not Load
+Manufacturing Part Is Not Found
 
-- Confirm internet connectivity.
-- Verify that the hosted Vercel backend is operational.
-- Confirm the requested part exists in the configured inventory database.
+* Confirm the part number is entered correctly.
+* Use a verified demonstration part number.
+* Check internet connectivity.
+* Confirm the hosted manufacturing database is available.
 
-### AI Report Generation Fails
+Voice Recognition Does Not Work
 
-- Check internet connectivity.
-- Confirm the Meta AI backend is configured.
-- Review Vercel logs for timeout or API errors.
-- Retry without discarding the recorded investigation answers.
+* Allow microphone permission.
+* Allow speech recognition permission.
+* Confirm speech recognition is supported on the device.
 
----
+AI Report Generation Fails
 
-## Project Vision
+* Confirm internet connectivity.
+* Check whether the AI usage limit has been reached.
+* Verify the Meta AI backend is available.
+* Review Vercel logs for timeout or API errors.
+* Retry without discarding recorded investigation answers.
+
+⸻
+
+Project Vision
 
 Manufacturing inventory discrepancies affect far more than physical counts.
 
-They influence material purchasing, production planning, financial reporting, labor efficiency, and manufacturing operations.
+They influence purchasing, production planning, financial reporting, labor efficiency, and manufacturing operations.
 
 Foresight explores how AI can help manufacturers move from reactive inventory corrections toward proactive investigation and prevention.
 
 The long-term vision includes:
 
-- Intelligent cycle-count prioritization
-- Automated discrepancy detection
-- Manufacturing-order reconciliation
-- Material substitution tracking
-- Scrap analysis
-- AI-assisted root-cause investigations
-- Administrator review and approval workflows
-- Multi-facility manufacturing intelligence
+* Intelligent cycle-count prioritization
+* Automated discrepancy detection
+* Manufacturing-order reconciliation
+* Material substitution tracking
+* Scrap analysis
+* AI-assisted root-cause investigations
+* Administrator review and approval workflows
+* Multi-facility manufacturing intelligence
 
----
+⸻
 
-## Hackathon
+Hackathon
 
-**Project:** Foresight — AI Manufacturing Intelligence
+Project: Foresight — AI Manufacturing Intelligence
 
-**Event:** Meta AI Developer Hackathon 2026
+Event: Meta AI Developer Hackathon 2026
 
-**Platform:** Native iOS Application
+Platform: Native iOS Application
 
-**Primary Technologies:** SwiftUI, Meta AI, Vercel, Supabase
+Primary Technologies: SwiftUI, Meta AI, Vercel, Supabase, Upstash Redis
 
-**Project Focus:** Manufacturing inventory accuracy, artificial intelligence, computer vision, and root-cause analysis.
+Project Focus: Manufacturing inventory accuracy, artificial intelligence, computer vision, and root-cause analysis.
 
----
+⸻
 
-## Developer
+Developer
 
 Developed as an independent manufacturing technology project inspired by firsthand experience with inventory control, cycle counting, and production discrepancies.
 
-**Foresight — Identify. Investigate. Correct. Prevent.**
+Foresight — Identify. Investigate. Correct. Prevent.
