@@ -1,22 +1,6 @@
-/*
-=============================================
-FORESIGHT — SERVER-SIDE AI RATE LIMITING
-=============================================
-
-RCA:
-  5 requests per IP per hour
-
-Image analysis:
-  10 requests per IP per hour
-
-All AI endpoints combined:
-  100 requests per 24 hours
-
-All counters are shared across Vercel
-server instances.
-
-If Redis is unavailable, AI calls are blocked.
-*/
+import {
+  enforceAIRateLimit
+} from "./_lib/ai-rate-limit.js";
 
 let limiters = null;
 
