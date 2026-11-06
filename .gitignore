@@ -20,3 +20,5 @@ DerivedData/
 *.mobileprovision
 
 # Keep .xcodeproj and any committed Swift package resolution files
+
+node_modules/
