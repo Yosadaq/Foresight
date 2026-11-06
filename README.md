@@ -327,19 +327,74 @@ To test:
 
 Demonstration Part Numbers
 
-Use the following section to document part numbers verified to exist in the hosted Supabase demonstration database.
+Foresight includes manufacturing inventory records that judges can use to test part lookup, inventory details, and AI-guided root-cause investigations.
 
-The actual database part numbers must be added before publishing this section as a judge-ready lookup list.
+The following part numbers are present in the demonstration manufacturing catalog.
 
-Part Number	Description	Demonstration
-To be populated	Manufacturing component	Inventory lookup and RCA
-To be populated	Raw material	Material specifications
-To be populated	Manufactured assembly	Bill-of-material relationships
-To be populated	Inventory discrepancy example	Root-cause investigation
+Important: Enter part numbers exactly as shown, including leading zeros, letters, and special characters.
 
-For the strongest demonstration, include at least one verified part with a negative ERP balance and enough associated inventory data to support a meaningful root-cause investigation.
+Part Number	Manufacturing Description	Type
+000489	1100 FR22 EXTRU	Raw Material
+001040	1100 HINGE EXTRU	Raw Material
+001773	1100 PERF FRAME EXTRU	Raw Material
+00241152	GVZ 0.024 1.813XCOIL	Raw Material
+004255	CRS 0.024 1.2812XCOIL	Raw Material
+004287	CRS 0.027 48X120	Raw Material
+005524	AL 0.032 2.375XCOIL	Raw Material
+00R305	AL 0.032 1.66XCOIL	Raw Material
+00TCAS	HINGE,AL,.032,.75 X .25	Raw Material
+02264001	.040 MUSIC WIRE CUT50# CO	Raw Material
+02264002	.051 MUSIC WIRE CUT 50#CO	Raw Material
+02264017	.020 MUSIC SPRING WIRE50#	Raw Material
+040150	CRS 0.027 1.6562XCOIL	Raw Material
+0RM067	.040 24.75”X CL AL PERF	Raw Material
+0RM073	CRS 0.027 25” COIL PERF	Raw Material
+1/2X24X6INS	INSUL 1/2X24X6# FIBREFLEX	Raw Material
+100023	CRS 0.034 4.656XCOIL	Raw Material
+10179702	#8-18X1/2” SLT CRIMPTITE	Raw Material
+10341901	TMS 26 BUTTON PLUG	Raw Material
+10345801	NUT, WELD 1/2-20 SHAMROCK	Raw Material
 
-These identifiers should be taken directly from the configured test database rather than invented.
+Recommended Parts for Testing
+
+For a quick demonstration, try these examples:
+
+Part Number	Suggested Investigation
+000489	Extruded component identification and material tracking
+00241152	Coil inventory, material usage, and physical counts
+005524	Aluminum coil inventory and material specifications
+02264017	Spring wire usage and manufacturing reporting
+0RM073	Perforated coil material verification
+10345801	Weld nut inventory and component consumption
+
+These are suggested investigation topics, not confirmed inventory discrepancies. The available questions and report details depend on the selected part’s actual database records.
+
+How to Run the AI Investigation
+
+1. Launch Foresight on your iPhone or iOS Simulator.
+2. Open Manufacturing Part Lookup.
+3. Enter one of the part numbers above.
+4. Select Search Manufacturing Database.
+5. Review the manufacturing part information.
+6. Select Analyze This Part.
+7. Follow the AI-guided investigation questions.
+8. Provide responses using voice recognition or keyboard input.
+9. Select Generate AI Root Cause Report.
+10. Review the findings and recommended corrective actions.
+
+Foresight uses the selected part and investigation responses to generate an AI-assisted report.
+
+Testing Computer Vision Separately
+
+You can also test Foresight’s image recognition without using a manufacturing part number.
+
+Select Open Camera or Choose Existing Photo and provide an image containing recognizable objects, such as tools, bolts, washers, boxes, or everyday items.
+
+The AI attempts to identify, describe, and count visible objects.
+
+Objects that do not exist in the manufacturing database may still be recognized visually, but they will not have verified manufacturing catalog matches.
+
+All AI-generated identifications and quantity estimates require human review.
 
 ⸻
 
