@@ -1,94 +1,208 @@
+/*
+=============================================
+FORESIGHT — SERVER-SIDE AI RATE LIMITING
+=============================================
 
-import {
-  getFirebaseAdmin
-} from "./firebase-admin.js";
+RCA:
+  5 requests per IP per hour
 
-const DEFAULT_DAILY_LIMIT = 100;
+Image analysis:
+  10 requests per IP per hour
 
-export async function enforceAIRateLimit({
-  uid,
-  limit = DEFAULT_DAILY_LIMIT
-}) {
-  if (
-    typeof uid !== "string" ||
-    !uid.trim()
-  ) {
-    const error = new Error(
-      "Authentication is required."
-    );
+All AI endpoints combined:
+  100 requests per 24 hours
 
-    error.statusCode = 401;
-    error.code = "UNAUTHENTICATED";
+All counters are shared across Vercel
+server instances.
 
-    throw error;
+If Redis is unavailable, AI calls are blocked.
+*/
+
+let limiters = null;
+
+function initializeLimiters() {
+  if (limiters) {
+    return limiters;
   }
 
-  const { db } = getFirebaseAdmin();
+  if (
+    !process.env.UPSTASH_REDIS_REST_URL ||
+    !process.env.UPSTASH_REDIS_REST_TOKEN
+  ) {
+    throw new Error(
+      "AI rate limiter is not configured."
+    );
+  }
 
-  const date = new Date()
-    .toISOString()
-    .slice(0, 10);
+  const redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN
+  });
 
-  const rateLimitRef = db.ref(
-    `AIRateLimits/${uid}/${date}`
+  limiters = {
+    rca: new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(
+        5,
+        "1 h"
+      ),
+      prefix: "foresight:ai:rca"
+    }),
+
+    image: new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(
+        10,
+        "1 h"
+      ),
+      prefix: "foresight:ai:image"
+    }),
+
+    global: new Ratelimit({
+      redis,
+      limiter: Ratelimit.fixedWindow(
+        100,
+        "1 d"
+      ),
+      prefix: "foresight:ai:global"
+    })
+  };
+
+  return limiters;
+}
+
+function clientIdentifier(req) {
+  // Use the client IP supplied through Vercel.
+  // Do not accept arbitrary user-provided IDs
+  // as proof of identity.
+
+  const forwarded = req.headers["x-forwarded-for"];
+
+  const address = (
+    Array.isArray(forwarded)
+      ? forwarded[0]
+      : forwarded?.split(",")[0]
+  )?.trim();
+
+  const ip =
+    address ||
+    req.socket?.remoteAddress ||
+    "unknown";
+
+  // Avoid storing plaintext IPs as Redis keys.
+  return createHash("sha256")
+    .update(ip)
+    .digest("hex");
+}
+
+function sendLimitedResponse(res, reset) {
+  const retryAfter = Math.max(
+    1,
+    Math.ceil(
+      (reset - Date.now()) / 1000
+    )
   );
 
-  let allowed = false;
-  let currentCount = 0;
+  res.setHeader(
+    "Retry-After",
+    String(retryAfter)
+  );
 
-  const result =
-    await rateLimitRef.transaction(
-      current => {
-        const count =
-          Number(current?.count || 0);
+  res.setHeader(
+    "Cache-Control",
+    "no-store"
+  );
 
-        if (
-          !Number.isSafeInteger(count) ||
-          count < 0 ||
-          count >= limit
-        ) {
-          return;
-        }
+  res.status(429).json({
+    success: false,
+    code: "AI_RATE_LIMITED",
+    error:
+      "Foresight AI usage limit reached. " +
+      "Please try again later.",
+    retryAfterSeconds: retryAfter
+  });
 
-        allowed = true;
-        currentCount = count + 1;
+  return false;
+}
 
-        return {
-          count: count + 1,
-          limit,
-          updatedAt: Date.now()
-        };
-      },
-      undefined,
-      false
-    );
+/*
+=============================================
+CALL BEFORE ANY META MODEL REQUEST
+=============================================
+*/
 
-  const finalCount =
-    Number(
-      result.snapshot.val()?.count || 0
-    );
-
-  if (!result.committed) {
-    const error = new Error(
-      "Daily AI scan limit reached."
-    );
-
-    error.statusCode = 429;
-    error.code = "AI_RATE_LIMIT_EXCEEDED";
-
-    throw error;
+export async function enforceAIRateLimit(
+  req,
+  res,
+  operation = "rca"
+) {
+  if (res.headersSent) {
+    return false;
   }
 
-  return {
-    allowed: true,
-    used: finalCount,
-    remaining: Math.max(
-      0,
-      limit - finalCount
-    ),
-    limit,
-    resetsAt:
-      `${date}T23:59:59.999Z`
-  };
+  if (
+    operation !== "rca" &&
+    operation !== "image"
+  ) {
+    res.status(500).json({
+      success: false,
+      error: "Invalid AI operation."
+    });
+
+    return false;
+  }
+
+  try {
+    const configured = initializeLimiters();
+
+    const id = clientIdentifier(req);
+
+    // Check individual request limits first.
+    const individual = await configured[
+      operation
+    ].limit(id);
+
+    if (!individual.success) {
+      return sendLimitedResponse(
+        res,
+        individual.reset
+      );
+    }
+
+    // Shared cap across all AI endpoints.
+    const global = await configured.global.limit(
+      "all-ai-requests"
+    );
+
+    if (!global.success) {
+      return sendLimitedResponse(
+        res,
+        global.reset
+      );
+    }
+
+    return true;
+
+  } catch (error) {
+    console.error(
+      "[FORESIGHT AI RATE LIMIT ERROR]",
+      error
+    );
+
+    // Fail closed: no unlimited AI usage.
+    res.setHeader(
+      "Cache-Control",
+      "no-store"
+    );
+
+    res.status(503).json({
+      success: false,
+      code: "AI_RATE_LIMIT_UNAVAILABLE",
+      error:
+        "AI requests are temporarily unavailable."
+    });
+
+    return false;
+  }
 }
 
